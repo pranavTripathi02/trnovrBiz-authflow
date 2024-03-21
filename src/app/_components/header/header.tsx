@@ -5,7 +5,7 @@ import HeaderAuth from "./headerAuth";
 
 function Header() {
   return (
-    <header className="flex flex-col">
+    <header className="sticky top-0 flex flex-col">
       <HeaderAuth />
       <div className="flex justify-between">
         {/* logo */}
