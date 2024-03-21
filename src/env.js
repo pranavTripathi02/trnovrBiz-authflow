@@ -17,7 +17,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    VERCEL_URL: z.string().url(),
+    // VERCEL_URL: z.string().url(),
   },
 
   /**
@@ -36,7 +36,7 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    VERCEL_URL: process.env.VERCEL_URL,
+    // VERCEL_URL: process.env.VERCEL_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
