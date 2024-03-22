@@ -16,18 +16,25 @@ model User {
     email             String             @unique
     password          String
     name              String?
-    lastLogin         DateTime
+    lastLogin         DateTime?
     createdAt         DateTime           @default(now())
     isVerified        Boolean            @default(false)
     categories        UserToCategories[]
     VerificationToken VerificationToken?
+    Session           Session?
 }
 
 model VerificationToken {
     id     Int  @id @default(autoincrement())
-    token  Int
+    token  String
     userId Int  @unique
     user   User @relation(fields: [userId], references: [id])
+}
+
+model Session {
+    id     String @id @default(uuid())
+    userId Int    @unique()
+    user   User   @relation(fields: [userId], references: [id])
 }
 
 model Category {
