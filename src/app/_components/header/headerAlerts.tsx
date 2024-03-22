@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function HeaderAlerts() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex justify-center space-x-6 bg-neutral-100 pt-2 text-sm">
       <button>
         <ChevronLeft width={16} />
       </button>

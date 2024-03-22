@@ -5,13 +5,13 @@ import HeaderAuth from "./headerAuth";
 
 function Header() {
   return (
-    <header className="sticky top-0 flex flex-col">
+    <header className="sticky top-0 mb-8 flex flex-col bg-white">
       <HeaderAuth />
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between px-8 py-4">
         {/* logo */}
-        <div className="text-2xl font-bold uppercase">Ecommerce</div>
+        <div className="text-3xl font-bold uppercase">Ecommerce</div>
         {/* links */}
-        <div className="flex text-lg">
+        <div className="flex space-x-8 text-lg font-semibold">
           <Link href="#">Categories</Link>
           <Link href="#">Sale</Link>
           <Link href="#">Clearance</Link>
@@ -19,7 +19,7 @@ function Header() {
           <Link href="#">Trending</Link>
         </div>
         {/* search & cart */}
-        <div className="flex">
+        <div className="flex space-x-12 text-neutral-600">
           <SearchIcon />
           <ShoppingCartIcon />
         </div>

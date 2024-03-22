@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { api } from "@/trpc/react";
 
 const formSchema = z
   .object({
-    name: z.string().optional(),
+    name: z.string(),
     email: z
       .string({ required_error: "Enter your email" })
       .email({ message: "Please enter a valid email." })
@@ -36,58 +37,73 @@ function Register() {
   // const mutation = api.users.register.useMutation();
   // const router = useRouter();
 
+  const mutation = api.user.register.useMutation();
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    const { name, email, password } = data;
+    mutation.mutate({ name, email, password });
   };
 
   return (
-    <div className="rounded border border-2 ">
-      <h1 className="text-lg">Create your Account</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="name" className="block">
-          Name
-        </label>
-        <input
-          id="name"
-          className="border"
-          {...register("name")}
-          placeholder="Enter"
-        />
-        <p>{errors.name?.message}</p>
+    <div>
+      <h1 className="mb-8 text-3xl font-bold">Create your account</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 text-left">
+        <div>
+          <label htmlFor="name" className="mb-2 block">
+            Name
+          </label>
+          <input
+            id="name"
+            className="w-full rounded-md border px-4 py-2"
+            {...register("name")}
+            placeholder="Enter"
+            disabled={mutation.isPending}
+          />
+          <p>{errors.name?.message}</p>
+        </div>
 
-        <label htmlFor="email" className="block">
-          Email
-        </label>
-        <input
-          id="email"
-          className="border"
-          {...register("email")}
-          placeholder="Enter"
-        />
-        <p>{errors.email?.message}</p>
+        <div>
+          <label htmlFor="email" className="mb-2 block">
+            Email
+          </label>
+          <input
+            id="email"
+            className="w-full rounded-md border px-4 py-2"
+            {...register("email")}
+            placeholder="Enter"
+            disabled={mutation.isPending}
+          />
+          <p>{errors.email?.message}</p>
+        </div>
 
-        <label htmlFor="password" className="block">
-          Password
-        </label>
-        <input
-          id="password"
-          className="border"
-          {...register("password")}
-          placeholder="Enter"
-        />
-        <p>{errors.password?.message}</p>
+        <div>
+          <label htmlFor="password" className="mb-2 block">
+            Password
+          </label>
+          <input
+            id="password"
+            className="w-full rounded-md border px-4 py-2"
+            {...register("password")}
+            placeholder="Enter"
+            type="password"
+            disabled={mutation.isPending}
+          />
+          <p>{errors.password?.message}</p>
+        </div>
 
-        <button type="submit" className="w-full text-center uppercase">
-          create account
+        <button
+          type="submit"
+          className={`w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white ${mutation.isPending ? "opacity-80" : "opacity-100"}`}
+          disabled={mutation.isPending}
+        >
+          CREATE ACCOUNT
         </button>
+        <p className="text-center text-[14px]">
+          Have an Account?
+          <Link href="/login" className="mx-2 font-medium uppercase">
+            Login
+          </Link>
+        </p>
       </form>
-
-      <p>
-        Have an account?{" "}
-        <Link href="/login" className="uppercase">
-          Login
-        </Link>
-      </p>
     </div>
   );
 }
