@@ -32,7 +32,7 @@ function VerifyMail({
       <h1 className="mb-8 text-3xl font-bold">Verify your email</h1>
       <p className="mb-8">
         Enter the 8 digit code you have received on {userMail[0]}
-        {userMail[1]}***
+        {userMail[1] && userMail[1]}***
         {userMail.substring(userMail.indexOf("@"))}
       </p>
       <div className="my-4 mb-12">

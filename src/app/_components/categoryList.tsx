@@ -6,27 +6,35 @@ import Pagination from "./pagination";
 import { LoaderCircleIcon } from "lucide-react";
 
 function CategoryList() {
+  const mutationUserToCategories =
+    api.category.userCategoryToggle.useMutation();
+  const userCategories = api.user.getUserCategories.useQuery();
+  const {
+    data: userCategoriesData,
+    isError: userCategoriesError,
+    isPending: userCategoriesPending,
+  } = userCategories;
   const [page, setPage] = useState(0);
   const query = api.category.get.useQuery({
     offset: page * 6,
   });
   const { isPending, isError, data, error } = query;
-  if (isPending) {
+  if (isPending || userCategoriesPending) {
     return (
       <div className="animate-spin">
         <LoaderCircleIcon width={48} height={48} className="mx-auto my-8" />
       </div>
     );
   }
-  if (isError) {
-    return <span>Error: {error.message}</span>;
+  if (isError || userCategoriesError) {
+    return <span>Error: {error?.message}</span>;
   }
 
-  const mutation = api.category.userCategoryToggle.useMutation();
   const handleCategorySelect = async (categoryId: number) => {
-    await mutation.mutateAsync({
+    await mutationUserToCategories.mutateAsync({
       categoryId,
     });
+    await userCategories.refetch();
   };
 
   const { categories, count } = data;
@@ -34,7 +42,11 @@ function CategoryList() {
   return (
     <div className="mt-4">
       {categories.map((category) => {
-        console.log(category);
+        const isChecked = userCategoriesData.find(
+          (i) => i.categoryId == category.id,
+        )
+          ? true
+          : false;
         return (
           <div key={category.id} className="my-2">
             <div role="button">
@@ -51,6 +63,7 @@ function CategoryList() {
                       <input
                         id={category.name}
                         type="checkbox"
+                        checked={isChecked}
                         className="before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border bg-neutral-300 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-gray-900 checked:bg-gray-900 checked:before:bg-gray-900 hover:before:opacity-0"
                         onChange={() => handleCategorySelect(category.id)}
                       />
@@ -64,9 +77,9 @@ function CategoryList() {
                           strokeWidth="1"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       </span>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const formSchema = z
   .object({
@@ -48,7 +49,8 @@ function Login() {
     await mutation.mutateAsync(
       { email, password },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          setCookie("accessToken", data.accessToken);
           router.push("/");
         },
       },

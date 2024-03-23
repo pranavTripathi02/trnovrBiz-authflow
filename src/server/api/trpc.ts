@@ -12,6 +12,7 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { verifyToken } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 /**
  * 1. CONTEXT
@@ -85,10 +86,10 @@ export const publicProcedure = t.procedure;
 
 const isAuthed = t.middleware(async ({ ctx, next }) => {
   // JWT
-  const userFromToken = await verifyToken();
+  const { id, name } = await verifyToken();
   return next({
     ctx: {
-      user: { userId: 123, userName: "" },
+      user: { userId: id, userName: name },
       ...ctx,
     },
   });

@@ -2,13 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
 import { transporter, mailOptions } from "@/lib/nodemailer";
 import jwt from "jsonwebtoken";
 import { env } from "@/env";
 import { setToken } from "@/lib/auth";
-import { api } from "@/trpc/server";
-import { TRPCClientError } from "@trpc/client";
 
 const userRouter = createTRPCRouter({
   register: publicProcedure
@@ -26,6 +23,7 @@ const userRouter = createTRPCRouter({
         const userVerificationToken = "75258437";
         await transporter.sendMail({
           ...mailOptions,
+          to: userExists.email,
           subject: "Verify your account",
           text: `Hi ${name}, your verification token is: ${userVerificationToken}`,
           html: `
@@ -66,6 +64,7 @@ const userRouter = createTRPCRouter({
         });
         await transporter.sendMail({
           ...mailOptions,
+          to: createdUser.email,
           subject: "Verify your account",
           text: `Hi ${name}, your verification token is: ${userVerificationToken}`,
           html: `
@@ -144,12 +143,14 @@ const userRouter = createTRPCRouter({
         id: userFound.id,
         name: userFound.name,
       };
-      const accessTokenJWT = jwt.sign(jwtUser, env.JWT_SECRET);
-      const test = await setToken(accessTokenJWT);
-      console.log(test);
+      const accessTokenJWT = jwt.sign(jwtUser, env.JWT_SECRET, {
+        expiresIn: "15m",
+      });
+      // console.log("signed", accessTokenJWT);
       return {
         message: "You are now logged in",
         user: jwtUser,
+        accessToken: accessTokenJWT,
       };
     }),
   getUserSession: protectedProcedure.query(async ({ ctx }) => {
@@ -157,7 +158,6 @@ const userRouter = createTRPCRouter({
     if (!userId) {
       console.log("no user id");
     }
-    console.log("i am here this is uesrid", ctx, ctx.user.userId);
     const userFound = await ctx.db.user.findFirst({
       where: { id: userId, isVerified: true },
       select: {
@@ -167,33 +167,33 @@ const userRouter = createTRPCRouter({
       },
     });
     if (!userFound) {
-      cookies().delete("accessToken");
       throw new TRPCError({
         message: "Invalid session cookie. Please log in again.",
         code: "UNAUTHORIZED",
       });
     }
-    console.log("here", userFound);
     return { user: userFound };
   }),
-  getUserCategories: protectedProcedure
-    .input(z.object({ userId: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const { userId } = input;
-      const userCategories = await ctx.db.user.findFirst({
-        where: { id: userId },
-        select: {
-          categories: true,
+  getUserCategories: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.user.userId;
+    const userCategories = await ctx.db.user.findFirst({
+      where: { id: userId },
+      select: {
+        categories: {
+          select: {
+            categoryId: true,
+          },
         },
+      },
+    });
+    if (!userCategories?.categories) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
       });
-      if (!userCategories?.categories) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-        });
-      }
+    }
 
-      return userCategories.categories;
-    }),
+    return userCategories.categories;
+  }),
 });
 
 export default userRouter;

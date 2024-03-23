@@ -19,6 +19,8 @@ export const categoryRouter = createTRPCRouter({
     .input(z.object({ categoryId: z.number() }))
     .mutation(async ({ input, ctx }) => {
       const { categoryId } = input;
+      const userId = ctx.user.userId;
+      console.log(ctx, userId);
       const indexExists = await ctx.db.userToCategories.findUnique({
         where: {
           userId_categoryId: {
