@@ -2,11 +2,13 @@ import { SearchIcon, ShoppingCartIcon } from "lucide-react";
 import Link from "next/link";
 import HeaderAlerts from "./headerAlerts";
 import HeaderAuth from "./headerAuth";
+import getUserSession from "@/lib/getUserSession";
 
-function Header() {
+async function Header() {
+  const userSession = await getUserSession();
   return (
     <header className="sticky top-0 mb-8 flex flex-col bg-white">
-      <HeaderAuth />
+      {userSession && <HeaderAuth name={userSession.user.name} />}
       <div className="flex items-center justify-between px-8 py-4">
         {/* logo */}
         <div className="text-3xl font-bold uppercase">Ecommerce</div>
@@ -20,8 +22,8 @@ function Header() {
         </div>
         {/* search & cart */}
         <div className="flex space-x-12 text-neutral-600">
-          <SearchIcon />
-          <ShoppingCartIcon />
+          <SearchIcon aria-label="search" />
+          <ShoppingCartIcon aria-label="cart" />
         </div>
       </div>
       <HeaderAlerts />

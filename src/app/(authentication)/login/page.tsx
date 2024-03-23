@@ -93,15 +93,15 @@ function Login() {
               type={showPass ? "text" : "password"}
               disabled={mutation.isPending}
             />
-            <button
-              className="absolute right-4 top-2 underline"
+            <span
+              className="absolute right-4 top-2 cursor-pointer select-none underline"
               onClick={(e) => {
                 e.preventDefault();
                 handleShowPass();
               }}
             >
               Show
-            </button>
+            </span>
           </div>
           <p className="text-red-600">{errors.password?.message}</p>
         </div>

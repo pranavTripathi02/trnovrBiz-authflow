@@ -1,6 +1,5 @@
 "use server";
 import { api } from "@/trpc/server";
-import { cookies } from "next/headers";
 
 async function getUserSession() {
   try {
@@ -11,9 +10,5 @@ async function getUserSession() {
     return null;
   }
 }
-
-export const logoutUser = () => {
-  cookies().delete("accessToken");
-};
 
 export default getUserSession;

@@ -4,12 +4,12 @@ function HeaderAlerts() {
   return (
     <div className="flex justify-center space-x-6 bg-neutral-100 pt-2 text-sm">
       <button>
-        <ChevronLeft width={16} />
+        <ChevronLeft width={16} aria-label="alert-left" />
       </button>
       {/* alert */}
       <div>Get 10% off on business sign up</div>
       <button>
-        <ChevronRight width={16} />
+        <ChevronRight width={16} aria-label="alert-right" />
       </button>
     </div>
   );
