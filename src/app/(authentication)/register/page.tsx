@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import VerifyMail from "./verifyMail";
 

@@ -12,7 +12,6 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { verifyToken } from "@/lib/auth";
-import { cookies } from "next/headers";
 
 /**
  * 1. CONTEXT

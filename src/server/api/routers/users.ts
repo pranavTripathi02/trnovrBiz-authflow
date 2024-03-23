@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import { transporter, mailOptions } from "@/lib/nodemailer";
 import jwt from "jsonwebtoken";
 import { env } from "@/env";
-import { setToken } from "@/lib/auth";
 
 const userRouter = createTRPCRouter({
   register: publicProcedure
