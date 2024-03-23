@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import VerifyMail from "./verifyMail";
 
 const formSchema = z
   .object({
@@ -36,7 +38,9 @@ function Register() {
     },
   });
   // const mutation = api.users.register.useMutation();
-  const router = useRouter();
+  const [showVerify, setShowVerify] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [userMail, setUserMail] = useState<string | null>(null);
 
   const mutation = api.user.register.useMutation();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -45,12 +49,17 @@ function Register() {
       { name, email, password },
       {
         onSuccess: (data) => {
-          const userId = data.userId;
-          router.replace(`/verify?user=${userId}`);
+          setUserMail(email);
+          setUserId(data.userId);
+          setShowVerify(true);
         },
       },
     );
   };
+
+  if (showVerify) {
+    return <VerifyMail userId={userId!} userMail={userMail!} />;
+  }
 
   return (
     <div>
