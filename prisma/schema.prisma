@@ -21,7 +21,6 @@ model User {
     isVerified        Boolean            @default(false)
     categories        UserToCategories[]
     VerificationToken VerificationToken?
-    Session           Session?
 }
 
 model VerificationToken {
@@ -29,12 +28,6 @@ model VerificationToken {
     token  String
     userId Int  @unique
     user   User @relation(fields: [userId], references: [id])
-}
-
-model Session {
-    id     String @id @default(uuid())
-    userId Int    @unique()
-    user   User   @relation(fields: [userId], references: [id])
 }
 
 model Category {

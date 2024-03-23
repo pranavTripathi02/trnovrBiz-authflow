@@ -8,14 +8,16 @@ import { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
-
 const formSchema = z
   .object({
     email: z
       .string({ required_error: "Enter your email" })
       .email({ message: "Please enter a valid email." })
       .trim(),
-    password: z.string({ required_error: "Password is required" }).trim(),
+    password: z
+      .string({ required_error: "Password is required" })
+      .min(1, { message: "Password is required" })
+      .trim(),
   })
   .strict({ message: "Invalid fields" });
 
@@ -43,9 +45,14 @@ function Login() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { email, password } = data;
-    await mutation.mutateAsync({ email, password },{onSuccess(data, variables, context) {
-        
-    },);
+    await mutation.mutateAsync(
+      { email, password },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    );
   };
 
   return (
@@ -67,7 +74,7 @@ function Login() {
             placeholder="Enter"
             disabled={mutation.isPending}
           />
-          <p>{errors.email?.message}</p>
+          <p className="text-red-600">{errors.email?.message}</p>
         </div>
 
         <div>
@@ -86,14 +93,20 @@ function Login() {
             />
             <button
               className="absolute right-4 top-2 underline"
-              onClick={handleShowPass}
+              onClick={(e) => {
+                e.preventDefault();
+                handleShowPass();
+              }}
             >
               Show
             </button>
           </div>
-          <p>{errors.password?.message}</p>
+          <p className="text-red-600">{errors.password?.message}</p>
         </div>
 
+        {mutation.isError && (
+          <p className="text-center text-red-600">{mutation.error.message}</p>
+        )}
         <button
           type="submit"
           className={`w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white ${mutation.isPending ? "opacity-80" : "opacity-100"}`}

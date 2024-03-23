@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -35,12 +36,20 @@ function Register() {
     },
   });
   // const mutation = api.users.register.useMutation();
-  // const router = useRouter();
+  const router = useRouter();
 
   const mutation = api.user.register.useMutation();
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { name, email, password } = data;
-    mutation.mutate({ name, email, password });
+    await mutation.mutateAsync(
+      { name, email, password },
+      {
+        onSuccess: (data) => {
+          const userId = data.userId;
+          router.replace(`/verify?user=${userId}`);
+        },
+      },
+    );
   };
 
   return (

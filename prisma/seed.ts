@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 async function main() {
   let i = 0;
   while ((await db.category.count()) < 100 && i < 200) {
-    const product = faker.vehicle.type();
+    const product = faker.commerce.productAdjective();
     await db.category.upsert({
       where: { name: product },
       update: {},

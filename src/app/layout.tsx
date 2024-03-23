@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
           <Header />
-          <main className="mx-auto w-2/5 rounded-2xl border border-2 p-8 px-12 text-center">
+          <main className="container mx-auto w-2/3 max-w-[600px] rounded-2xl border border-2 p-8 px-12 text-center">
             {children}
           </main>
         </TRPCReactProvider>
