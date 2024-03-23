@@ -11,6 +11,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
+import { verifyToken } from "@/lib/auth";
 
 /**
  * 1. CONTEXT
@@ -24,10 +25,10 @@ import { db } from "@/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (_opts: { headers: Headers }) => {
   return {
     db,
-    ...opts,
+    ...{ headers: Headers },
   };
 };
 
@@ -81,3 +82,15 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+const isAuthed = t.middleware(async ({ ctx, next }) => {
+  // JWT
+  const userFromToken = await verifyToken();
+  return next({
+    ctx: {
+      user: { userId: 123, userName: "" },
+      ...ctx,
+    },
+  });
+});
+export const protectedProcedure = t.procedure.use(isAuthed);
