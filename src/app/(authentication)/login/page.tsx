@@ -114,19 +114,20 @@ function Login() {
             </span>
           </div>
           <p className="text-red-600">{errors.password?.message}</p>
-          <p className="text-green-800">
-            {mutation.isSuccess
-              ? "You are now logged in. Please wait while we redirect you. Refresh the page if it takes too long."
-              : null}
-          </p>
         </div>
 
         {mutation.isError && (
           <p className="text-center text-red-600">{mutation.error.message}</p>
         )}
+        {mutation.isSuccess && (
+          <p className="text-center text-green-800">
+            You are now logged in. Please wait while we redirect you. Refresh
+            the page if it takes too long.
+          </p>
+        )}
         <button
           type="submit"
-          className={`w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white ${mutation.isPending ? "opacity-80" : "opacity-100"}`}
+          className={`w-full rounded-md py-4 text-center font-medium uppercase ${mutation.isPending ? "cursor-progress bg-neutral-300 text-black" : "bg-black text-white"}`}
         >
           LOGIN
         </button>

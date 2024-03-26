@@ -121,9 +121,14 @@ function Register() {
         {mutation.isError && (
           <p className="text-center text-red-600">{mutation.error.message}</p>
         )}
+        {mutation.isSuccess && (
+          <p className="text-center text-green-800">
+            Registration successfull. Redirecting to verification page.
+          </p>
+        )}
         <button
           type="submit"
-          className={`w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white ${mutation.isPending ? "opacity-80" : "opacity-100"}`}
+          className={`w-full rounded-md py-4 text-center font-medium uppercase ${mutation.isPending ? "cursor-progress bg-neutral-300 text-black" : "bg-black text-white"}`}
           disabled={mutation.isPending}
         >
           CREATE ACCOUNT

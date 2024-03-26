@@ -63,7 +63,7 @@ function VerifyMail({
           )}
           <button
             type="submit"
-            className="mt-10 w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white"
+            className={`mt-9 w-full rounded-md py-4 text-center font-medium uppercase ${mutation.isPending ? "cursor-progress bg-neutral-300 text-black" : "bg-black text-white"}`}
             onClick={(e) => {
               e.preventDefault();
               void handleVerify();
