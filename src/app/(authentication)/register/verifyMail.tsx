@@ -1,7 +1,6 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import OTPInput from "react-otp-input";
