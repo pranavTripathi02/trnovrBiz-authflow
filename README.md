@@ -13,7 +13,7 @@ Created using T3 Stack
 
 ### How to use the application
 - Register yourself using your name, email and password.
-- Verify your email handle using the 8 digit verification code sent to your inbox. (check spam)
+- Verify your email handle using the 8 digit verification code sent to your inbox. (check spam) (or use 12345678)
 - Login to the application after verifying your email address.
 - Start selecting your choices! (application might be a little slow due to Neon constraints)
 
