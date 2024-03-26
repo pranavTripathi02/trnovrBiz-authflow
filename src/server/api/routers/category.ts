@@ -12,15 +12,12 @@ export const categoryRouter = createTRPCRouter({
         skip: offset,
       });
       const count = await ctx.db.category.count();
-      console.log(categories, count);
       return { categories, count };
     }),
   userCategoryToggle: protectedProcedure
     .input(z.object({ categoryId: z.number() }))
     .mutation(async ({ input, ctx }) => {
       const { categoryId } = input;
-      const userId = ctx.user.userId;
-      console.log(ctx, userId);
       const indexExists = await ctx.db.userToCategories.findUnique({
         where: {
           userId_categoryId: {

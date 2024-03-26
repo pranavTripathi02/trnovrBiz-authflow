@@ -1,12 +1,19 @@
-import getUserSession from "@/lib/getUserSession";
+"use client";
 import CategoryList from "./_components/categoryList";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
 
-export default async function Home() {
-  const userSession = await getUserSession();
-  if (!userSession) {
-    redirect("/login");
-  }
+export default function Home() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user?.name) {
+      router.push("/login");
+    }
+  }, [user]);
+
   return (
     <div>
       <h1 className="mb-4 text-3xl font-bold">Please mark your interests!</h1>

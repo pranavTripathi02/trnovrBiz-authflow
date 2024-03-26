@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";
+import useAuth from "@/hooks/useAuth";
 
 const formSchema = z
   .object({
@@ -35,6 +36,9 @@ function Login() {
     },
   });
 
+  const router = useRouter();
+  const { user, checkAuth } = useAuth();
+
   const [showPass, setShowPass] = useState(false);
   const handleShowPass = () => setShowPass((prev) => !prev);
 
@@ -42,7 +46,6 @@ function Login() {
   // const router = useRouter();
 
   const mutation = api.user.login.useMutation();
-  const router = useRouter();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const { email, password } = data;
@@ -51,11 +54,18 @@ function Login() {
       {
         onSuccess: (data) => {
           setCookie("accessToken", data.accessToken);
+          checkAuth();
           router.push("/");
         },
       },
     );
   };
+
+  useEffect(() => {
+    if (user?.name) {
+      router.push("/");
+    }
+  }, [user]);
 
   return (
     <div>
@@ -104,6 +114,11 @@ function Login() {
             </span>
           </div>
           <p className="text-red-600">{errors.password?.message}</p>
+          <p className="text-green-800">
+            {mutation.isSuccess
+              ? "You are now logged in. Please wait while we redirect you. Refresh the page if it takes too long."
+              : null}
+          </p>
         </div>
 
         {mutation.isError && (

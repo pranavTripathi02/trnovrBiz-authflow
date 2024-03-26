@@ -84,6 +84,7 @@ const userRouter = createTRPCRouter({
         });
       }
     }),
+
   verifyUser: publicProcedure
     .input(z.object({ userId: z.number(), verificationToken: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -105,6 +106,7 @@ const userRouter = createTRPCRouter({
         data: { isVerified: true },
       });
     }),
+
   login: publicProcedure
     .input(
       z.object({
@@ -152,17 +154,17 @@ const userRouter = createTRPCRouter({
         accessToken: accessTokenJWT,
       };
     }),
+
   getUserSession: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.userId;
     if (!userId) {
-      console.log("no user id");
+      console.error("no user id");
     }
     const userFound = await ctx.db.user.findFirst({
       where: { id: userId, isVerified: true },
       select: {
         id: true,
         name: true,
-        categories: true,
       },
     });
     if (!userFound) {
@@ -173,6 +175,7 @@ const userRouter = createTRPCRouter({
     }
     return { user: userFound };
   }),
+
   getUserCategories: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.userId;
     const userCategories = await ctx.db.user.findFirst({

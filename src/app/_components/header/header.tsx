@@ -2,15 +2,11 @@ import { SearchIcon, ShoppingCartIcon } from "lucide-react";
 import Link from "next/link";
 import HeaderAlerts from "./headerAlerts";
 import HeaderAuth from "./headerAuth";
-import getUserSession from "@/lib/getUserSession";
 
 async function Header() {
-  const userSession = await getUserSession();
   return (
     <header className="sticky top-0 mb-8 flex flex-col bg-white">
-      {userSession?.user.name ? (
-        <HeaderAuth name={userSession.user.name} />
-      ) : null}
+      <HeaderAuth />
       <div className="flex items-center justify-between px-8 py-4">
         {/* logo */}
         <div className="text-3xl font-bold uppercase">Ecommerce</div>

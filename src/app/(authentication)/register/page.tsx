@@ -5,8 +5,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { api } from "@/trpc/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import VerifyMail from "./verifyMail";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 const formSchema = z
   .object({
@@ -55,6 +57,15 @@ function Register() {
       },
     );
   };
+
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.name) {
+      router.push("/");
+    }
+  }, [user]);
 
   if (showVerify) {
     return <VerifyMail userId={userId!} userMail={userMail!} />;
