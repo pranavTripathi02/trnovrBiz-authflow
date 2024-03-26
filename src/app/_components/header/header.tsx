@@ -11,7 +11,7 @@ async function Header() {
         {/* logo */}
         <div className="text-3xl font-bold uppercase">Ecommerce</div>
         {/* links */}
-        <div className="flex space-x-8 text-lg font-semibold">
+        <div className="hidden space-x-8 text-lg font-semibold lg:flex">
           <Link href="#">Categories</Link>
           <Link href="#">Sale</Link>
           <Link href="#">Clearance</Link>

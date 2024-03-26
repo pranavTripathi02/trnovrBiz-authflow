@@ -27,7 +27,7 @@ export default function RootLayout({
         <AuthProvider>
           <TRPCReactProvider>
             <Header />
-            <main className="container mx-auto w-2/3 max-w-[600px] rounded-2xl border border-2 p-8 px-12 text-center">
+            <main className="container mx-auto max-w-[600px] rounded-2xl border border-2 p-8 px-12 text-center md:w-2/3">
               {children}
             </main>
           </TRPCReactProvider>

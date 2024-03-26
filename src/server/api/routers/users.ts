@@ -19,7 +19,7 @@ const userRouter = createTRPCRouter({
       const { name, email, password } = input;
       const userExists = await ctx.db.user.findFirst({ where: { email } });
       if (userExists && !userExists.isVerified) {
-        const userVerificationToken = "75258437";
+        const userVerificationToken = "12345678";
         await transporter.sendMail({
           ...mailOptions,
           to: userExists.email,
@@ -28,6 +28,13 @@ const userRouter = createTRPCRouter({
           html: `
             <h1>Hi, ${name}</h1>
             Use this 8 digit code as your verification token <b>${userVerificationToken}</b>`,
+        });
+        // update prev verificationToken
+        await ctx.db.verificationToken.update({
+          where: { userId: userExists.id },
+          data: {
+            token: userVerificationToken,
+          },
         });
         return {
           userId: userExists.id,

@@ -118,6 +118,9 @@ function Register() {
           <p>{errors.password?.message}</p>
         </div>
 
+        {mutation.isError && (
+          <p className="text-center text-red-600">{mutation.error.message}</p>
+        )}
         <button
           type="submit"
           className={`w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white ${mutation.isPending ? "opacity-80" : "opacity-100"}`}

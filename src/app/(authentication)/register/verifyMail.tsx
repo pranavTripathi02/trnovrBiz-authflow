@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
+import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import OTPInput from "react-otp-input";
@@ -22,7 +23,7 @@ function VerifyMail({
       { userId, verificationToken: otp },
       {
         onSuccess: () => {
-          router.replace("/");
+          setTimeout(() => router.replace("/"), 2000);
         },
       },
     );
@@ -34,25 +35,45 @@ function VerifyMail({
         Enter the 8 digit code you have received on {userMail[0]}
         {userMail[1] && userMail[1]}***
         {userMail.substring(userMail.indexOf("@"))}
+        <span className="my-0 block text-sm opacity-80">
+          (Don&apos;t forget to check your spam folder)
+        </span>
       </p>
-      <div className="my-4 mb-12">
-        <h2 className="my-2 text-left">Code</h2>
-        <OTPInput
-          containerStyle={"flex justify-between"}
-          value={otp}
-          onChange={setOtp}
-          numInputs={8}
-          renderInput={(props) => <input {...props} />}
-          inputType="tel"
-          inputStyle={"border min-w-12 h-12 rounded-md"}
-        />
+      <div className="mb-2 mt-4">
+        <form>
+          <span className="my-2 block w-fit text-left">Code</span>
+          <OTPInput
+            containerStyle={"flex justify-between"}
+            value={otp}
+            onChange={setOtp}
+            numInputs={8}
+            renderInput={(props) => <input {...props} />}
+            inputType="tel"
+            inputStyle={"border min-w-12 h-12 rounded-md"}
+          />
+          <p className="my-2 text-xs opacity-40">(use 12345678)</p>
+          {mutation.isError && (
+            <p className="my-4 text-center text-red-600">
+              {mutation.error.message}
+            </p>
+          )}
+          {mutation.isSuccess && (
+            <p className="my-4 text-center text-green-800">
+              Verified! Please login.
+            </p>
+          )}
+          <button
+            type="submit"
+            className="mt-10 w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white"
+            onClick={(e) => {
+              e.preventDefault();
+              void handleVerify();
+            }}
+          >
+            VERIFY
+          </button>
+        </form>
       </div>
-      <button
-        className="w-full rounded-md bg-black py-4 text-center font-medium uppercase text-white"
-        onClick={handleVerify}
-      >
-        VERIFY
-      </button>
     </div>
   );
 }
